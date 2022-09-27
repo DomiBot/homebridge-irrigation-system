@@ -19,8 +19,8 @@ module.exports = function (homebridge) {
 	storagePath = homebridge.user.storagePath();
 
 	homebridge.registerAccessory(
-		"homebridge-irrigation",
-		"irrigation",
+		"homebridge-irrigation-system",
+		"irrigation-system",
 		Irrigation
 	);
 };
