@@ -1,5 +1,5 @@
 {
-  "name": "homebridge-irrigation",
+  "name": "homebridge-irrigation-system",
   "displayName": "Homebridge Irrigation System",
   "version": "1.0.0",
   "description": "Homebridge plugin that creates a Heater Cooler system accessory that can be triggered by HomeKit sensors.",
