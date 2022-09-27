@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "irrigation",
+  "pluginAlias": "irrigation-system",
   "pluginType": "accessory",
   "headerDisplay": "Create a security system accessory that can be triggered by HomeKit sensors.",
   "schema": {
