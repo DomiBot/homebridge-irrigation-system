@@ -7,7 +7,6 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 
 const packageJson = require("../package.json");
-const options = require("./utils/options.js");
 
 
 const app = express();
@@ -174,29 +173,54 @@ Irrigation.prototype.getOnHandlerValve = function (zone) {
 			return this.valve_4;
 	}
 }
+
 Irrigation.prototype.setOnHandlerValve = function (zone, value) {
 	if(value == true){ value = 1 }else if(value == false){ value = 0 }
 	if(value == 1){
-		this.accessorySwitch[zone]
-				.setCharacteristic(Characteristic.On, 1)
-	}else{
-		this.accessorySwitch[zone]
-				.setCharacteristic(Characteristic.On, 0)
+		this.zoneTimeEnd[zone] = Date.now()
+		this.accessoryValve[zone]
+			.updateCharacteristic(Characteristic.RemainingDuration, this.zoneDuration[zone])
+		setTimeout(() => {
+			this.accessoryValve[zone]
+				.updateCharacteristic(Characteristic.Active, 0)
+			this.accessoryValve[zone]
+				.updateCharacteristic(Characteristic.InUse, 0)
+			this.accessorySwitch[zone]
+				.updateCharacteristic(Characteristic.On, 0)
+			this.setValueValve(zone, 0)
+		}, this.zoneDuration[zone] * 1000)		
 	}
+	this.accessoryValve[zone]
+		.updateCharacteristic(Characteristic.Active, value)
+	this.accessoryValve[zone]
+		.updateCharacteristic(Characteristic.InUse, value)
+	this.accessorySwitch[zone]
+		.updateCharacteristic(Characteristic.On, value)
+	this.setValueValve(zone, value)
 }
+
 Irrigation.prototype.setOnHandlerSwitchValve = function (zone, value) {
 	if(value == true){ value = 1 }else if(value == false){ value = 0 }
 	if(value == 1){
 		this.zoneTimeEnd[zone] = Date.now()
 		this.accessoryValve[zone]
-			.setCharacteristic(Characteristic.RemainingDuration, this.zoneDuration[zone])
+			.updateCharacteristic(Characteristic.RemainingDuration, this.zoneDuration[zone])
 		setTimeout(() => {
 			this.accessoryValve[zone]
-				.setCharacteristic(Characteristic.Active, 0)
-		}, this.zoneDuration[zone] * 1000)
+				.updateCharacteristic(Characteristic.Active, 0)
+			this.accessoryValve[zone]
+				.updateCharacteristic(Characteristic.InUse, 0)
+			this.accessorySwitch[zone]
+				.updateCharacteristic(Characteristic.On, 0)
+			this.setValueValve(zone, 0)
+		}, this.zoneDuration[zone] * 1000)		
 	}
 	this.accessoryValve[zone]
+		.updateCharacteristic(Characteristic.Active, value)
+	this.accessoryValve[zone]
 		.updateCharacteristic(Characteristic.InUse, value)
+	this.accessorySwitch[zone]
+		.updateCharacteristic(Characteristic.On, value)
 	this.setValueValve(zone, value)
 }
 
